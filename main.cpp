@@ -1,6 +1,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <set>
 #include <algorithm>
 #include <iostream>
 #include <stdlib.h>
@@ -17,6 +18,17 @@ void display_word_to_screen(string word) {
     cout << border << endl;
     cout << word << endl;
     cout << border << endl;
+}
+
+void display_letters_guessed(set<char> letters_guessed) {
+    // Print out letters of a vector
+
+    cout << "LETTERS GUESSED: ";
+
+    for(char letter : letters_guessed) {
+        cout << letter << ' ';
+    }
+    cout << endl;
 }
 
 void clear_linux_terminal() {
@@ -140,7 +152,7 @@ int main() {
 
     int MAX_NUM_TRIES = get_max_num_tries();
 
-    vector<char> letters_guessed = {};
+    set<char> letters_guessed = {};
     map<char, vector<int>> letter_mapping = setup_letter_index_mapping(secret_word);
     
     while(calculate_attempts_left(display_word, secret_word) != 0) {
@@ -149,9 +161,12 @@ int main() {
         char user_guess = '0';
 
         display_word_to_screen(display_word);
+
+        display_letters_guessed(letters_guessed);
+
         cout << "Letter's left >> " << calculate_attempts_left(display_word, secret_word) << endl;
         
-        cout << "Player guess: ";
+        cout << "\nPlayer guess: ";
         cin >> user_guess;
 
         cout << endl;
@@ -177,7 +192,7 @@ int main() {
             cout << "******************************\n";
         }
 
-        letters_guessed.push_back(user_guess);
+        letters_guessed.insert(user_guess);
     }
 
     return 0;
