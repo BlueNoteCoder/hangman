@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include <stdlib.h>
 using namespace std;
 
 
@@ -18,6 +19,14 @@ void display_word_to_screen(string word) {
     cout << border << endl;
 }
 
+void clear_linux_terminal() {
+    system("clear");
+}
+
+void pause_linux_terminal() {
+    system("pause");
+}
+
 string get_magical_word_from_user() {
     string magical_word = "";
 
@@ -25,6 +34,8 @@ string get_magical_word_from_user() {
     getline(cin, magical_word);
     cout << endl;
 
+    clear_linux_terminal();
+    
     return magical_word;
 }
 
@@ -110,7 +121,7 @@ int calculate_attempts_left(string hidden_word, string secret_word) {
     vector<char> letters_found = {};
 
     for(int i = 0; i < hidden_word.size(); i++) {
-        if(hidden_word[i] == ' ' || hidden_word[i] == '-') {
+        if(hidden_word[i] == '-') {
             if(find(letters_found.begin(), letters_found.end(), secret_word[i]) == letters_found.end()) {
                 letters_found.push_back(secret_word[i]);
                 letters_left++;
@@ -120,12 +131,16 @@ int calculate_attempts_left(string hidden_word, string secret_word) {
 
     return letters_left;
 }
-int main() {
 
+int main() {
+    // TODO:  Implement display of char's already guessed.
+    
     string secret_word = get_magical_word_from_user();
     string display_word = setup_hidden_word(secret_word.size(), secret_word);
+
     int MAX_NUM_TRIES = get_max_num_tries();
 
+    vector<char> letters_guessed = {};
     map<char, vector<int>> letter_mapping = setup_letter_index_mapping(secret_word);
     
     while(calculate_attempts_left(display_word, secret_word) != 0) {
@@ -141,7 +156,10 @@ int main() {
 
         cout << endl;
 
+        clear_linux_terminal();
+        
         if(letter_exists_in_word(user_guess, letter_mapping)) {
+            
             if(letter_already_found(user_guess,display_word)) {
                 cout << "**********************\n";
                 cout << "LETTER ALREADY FOUND!" << endl;
@@ -158,6 +176,8 @@ int main() {
             cout << "LETTER DOESN'T EXIST IN WORD!" << endl;
             cout << "******************************\n";
         }
+
+        letters_guessed.push_back(user_guess);
     }
 
     return 0;
